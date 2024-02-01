@@ -1,0 +1,11 @@
+---
+apiVersion: builtin
+kind: LabelTransformer
+metadata:
+  name: dontcare
+labels:
+  source/project: brillpublishers-code-metabotnik
+
+fieldSpecs:
+- path: metadata/labels
+  create: true

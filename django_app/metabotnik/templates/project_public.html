@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load utilz %}
+{% load markup_tags %}
+
+{% block extra_style %}
+#thetip {display:none; width:350px; background-color:#fff; padding: 10px; -webkit-border-radius: 10; -moz-border-radius: 10; border-radius: 10;  z-index: 99999;}
+{% endblock %}
+
+{% block extra_head %}
+<meta property="og:title" content="{{project.name|default:"A Metabotnik!"}}" />
+{% if project.description %}<meta property="og:description" content="{project.description}}" />{% endif %}
+<meta property="og:image" content="https://metabotnik.com/s/project_{{project.pk}}/{{project.metabotnik_nonce}}_files/8/0_0.jpg" />
+{% endblock extra_head %}
+
+{% block maincontent %}
+<div id="thetip">
+    <p>Some text to go here...</p>
+</div>
+
+<div style="padding: 10px; ">
+    {% if project.metabotnik_path %}<a title="View this metabotnik, filling the browser window" href="{%url 'project' project.pk%}?kaal=1" class="button" style="float:right">V</a>{% endif %}
+
+<h3>{{project.name|default:"(currently nameless project)"}}</h3>
+{% if project.user == user %}
+<a class="button buttonsmall" href="{% url 'edit_project' project.pk %}">edit</a>
+{% endif %}
+
+{% if project.description %}
+<div>{{project.description|apply_markup:"markdown"}}</div>
+{% endif %}
+
+</div>
+
+{% if project.metabotnik_path %}
+    {% if False and not user.is_anonymous %}
+<div style="padding-left: 10px">
+    <a href="#" id="savesection" class="button" title="This will download a full-resolution version of the image to your hard disk, of the currently viewed selection of the metabotnik.">Download Selection</a>
+    <div id="savedsections" style="display:none"></div>
+</div>
+    {% endif %}
+
+<div id="preview" class="openseadragon" style="height: 550px; margin-top: 10px"></div>
+
+
+{% else %}
+<p>This project has not produced a metabotnik yet.</p>
+{% endif %}
+
+{% for f in project.files.all %}{% if "LINK" in f.metadata %}<div class="needhighlight" id="overlay{{f.pk}}"><img src="https://metabotnik.com/eye-512px.svg" width="20"></div>
+{% endif %}    
+{% endfor %}
+    
+{% endblock maincontent %}
+
+{% block extra_javascript_end %}
+{% if project.metabotnik_path %}
+var viewer1 = OpenSeadragon({
+    id:            "preview",
+    maxZoomPixelRatio: 100,
+    prefixUrl:     '{{STATIC_URL}}openseadragon/images/',
+    showNavigator:  false,
+    tileSources: "/s/project_{{project.pk}}/{{project.metabotnik_nonce}}.dzi",
+    overlays: [{% json_to_overlay project.layout_as_dict %}]
+});
+
+$('#savesection').click(function(event) {
+    event.preventDefault();
+    var thelink = $(this);
+    thelink.hide();
+    $('#savedsections').show();
+    $('#savedsections').html('Please wait, making your selection...');
+    var slction = viewer1.viewport.viewportToImageRectangle( viewer1.viewport.getBounds() );
+    $.post('{% url 'savesection' project.pk %}',
+            {'csrfmiddlewaretoken': '{{csrf_token}}',
+             'section': slction.x+' '+slction.y+' '+slction.width+' '+slction.height
+            },
+            function(data) { 
+                thelink.show();                
+                $('#savedsections').html('<a href="' + data + '">' + data + '</a> (NOTE: this could be a very large file)' );                
+            }
+    );
+});
+
+overlay_data = { {% for f in project.files.all %}{% if f.metadata %}overlay{{f.pk}}:{{f.metadata|safe}}{% if not forloop.last %},{% endif %}
+{% endif %}    
+{% endfor %}};
+
+setTimeout(function() {
+    var tip = $('#thetip');
+    $(".needhighlight").click(function(e) {
+        var the_link = overlay_data[$(this)[0].id].LINK;
+        document.location = the_link;
+    });
+    $(".needhighlight").hover(function(e) { 
+        var the_link = overlay_data[$(this)[0].id].LINK;
+        tip.html('<a href="' + the_link + '">' + the_link + '</a>');
+        
+        var mousex = e.pageX + 20, //Get X coodrinates
+            mousey = e.pageY + 20, //Get Y coordinates
+            tipWidth = tip.width(), //Find width of tooltip
+            tipHeight = tip.height(), //Find height of tooltip
+        
+        //Distance of element from the right edge of viewport
+            tipVisX = $(window).width() - (mousex + tipWidth),
+        //Distance of element from the bottom of viewport
+            tipVisY = $(window).height() - (mousey + tipHeight);
+          
+        if ( tipVisX < 20 ) { //If tooltip exceeds the X coordinate of viewport
+            mousex = e.pageX - tipWidth - 20;
+        } if ( tipVisY < 20 ) { //If tooltip exceeds the Y coordinate of viewport
+            mousey = e.pageY - tipHeight - 20;
+        } 
+        tip.css({  top: mousey, left: mousex, position: 'absolute' });
+        tip.show().css({opacity: 0.8}); //Show tooltip
+    }, function() {
+        HIDETOOLTIP = setTimeout(function() {
+            tip.hide(); //Hide tooltip
+        }, 1500);
+        
+    });
+}, 1000);
+
+
+{% endif %}
+
+{% endblock extra_javascript_end %}

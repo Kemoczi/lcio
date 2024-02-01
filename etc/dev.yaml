@@ -1,0 +1,4 @@
+environment: test
+branch: dev
+account_id: 121183038181
+cluster: brill-test-hetzner-eks

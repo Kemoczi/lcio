@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metabotnik
+  namespace: metabotnik
+  labels:
+    app: metabotnik
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: metabotnik
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: metabotnik
+    spec:
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: gitlab-registry-credentials
+      containers:
+        - name: metabotnik
+          image: registry.gitlab.com/brillpublishers/code/metabotnik:latest
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              cpu: "250m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metabotnik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metabotnik
+spec:
+  selector:
+    app: metabotnik
+  ports:
+    - protocol: TCP
+      port: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: metabotnik-api
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: metabotnik.brill.com # TODO: parameterize for each environments
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: metabotnik
+                port:
+                  number: 8000

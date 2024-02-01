@@ -1,0 +1,105 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+
+        <link rel="stylesheet" href="{{STATIC_URL}}css/normalize.css">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/main2.css">
+        <script src="{{STATIC_URL}}js/vendor/modernizr-2.8.0.min.js"></script>
+        <script type="text/javascript" src="{{STATIC_URL}}openseadragon/openseadragon.min.js"></script>
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}jquery.ui/jquery-ui.min.css">
+        <style type="text/css">{% block extra_style %}{% endblock %}</style>
+{% block extra_head %}{% endblock extra_head %}
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        {% block banner %}<div id="banner" class="clearfix">
+            <h2><a href="/">Metabotnik</a></h2>
+            {% if user.is_superuser %}
+                <h3><a href="/admin/">Admin</a></h3>
+            {% endif %}
+            <h3><a href="/help/about">About</a></h3>
+            <h3><a href="/projects/">Projects</a></h3>
+            <h3><a href="/help/faq">FAQ</a></h3>
+            <h3 style="margin-left: 300px">{% if user.is_anonymous %}<a href="/login">Login</a>{% else %}<h3 class=""><a href="/logout">Logout</a>{% endif %}</h3>
+        </div>{% endblock banner %}
+        
+        <div id="maincontent">{% block maincontent %}
+
+            <div class="shout" style="margin-bottom: 40px">
+                <h1>An easy way to create huge zoomable images composed of hundreds of smaller images.</h1>
+                <p>Here are some examples, try zooming in &amp; out and clicking-and-dragging with your mouse.</p>
+
+            </div>
+
+         
+            <h3 title="From the Special Collections department at the University of Amsterdam Library">Some pages of beautiful books through the centuries</h3>
+            <div id="thedzi1" class="openseadragon" style="height: 200px; margin-bottom: 40px"></div>
+
+            <h3 title="From the Special Collections department at the University of Amsterdam Library">A selection of historiated intitials</h3>
+            <div id="thedzi2" class="openseadragon" style="height: 200px;"></div>
+
+            <div class="spanhalf">
+                <h1>How does it work?</h1>
+                <ul>
+                    <li>Log in to this site using your Dropbox account</li>
+                    <li>Create a folder in your Dropbox and fill it with images</li>
+                    <li>Choose the folder in your Dropbox to make a metabotnik</li>
+                    <li>Arrange the sorting and layout of the images</li>
+                    <li>Add metadata to the images and layers</li>
+                    <li>Click the Generate button and wait for your gigantic zoomable image to be done</li>
+                    <li>Share and enjoy your work!</li>
+                </ul>
+
+                <a href="/login/" class="conversionbutton">Click here to get started</a>
+
+
+                <div style="text-align: center; margin-top: 75px; font-size: 75%">
+                    <p>This project is currently under development, and has been funded by <a href="http://www.nwo.nl/onderzoek-en-resultaten/onderzoeksprojecten/61/2300188161.html">The Netherlands Organisation for Scientific Research</a> </p>
+
+                    <p>We use the following technologies: <a href="https://www.python.org/">Python</a>, <a href="https://www.djangoproject.com/">Django</a>, <a href="http://openseadragon.github.io/">OpenSeadragon</a>, <a href="http://www.ubuntu.com/">Ubuntu</a>, <a href="http://www.vips.ecs.soton.ac.uk/">VIPS</a>, and all the source code is <a href="https://github.com/epoz/metabotnik">freely available on Github</a></p>
+                </div>
+            </div>
+        {% endblock maincontent %}
+        </div>
+
+        {% block footer %}<div id="footer" class="clearfix">
+            <a href="http://arkyves.org/"><img style="" height="75px" src="{{STATIC_URL}}img/arkyves_logo.png"></a>
+            <a href="http://www.bijzonderecollecties.uva.nl/"><img style="margin: 0 75px" src="{{STATIC_URL}}img/uva_logo.png"></a>
+            <a href="http://www.brill.com/"><img style="" height="75px" src="{{STATIC_URL}}img/brill_logo.png"></a>
+        </div>{% endblock footer %}
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{STATIC_URL}}js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+        <script src="{{STATIC_URL}}js/plugins.js"></script>
+        <script src="{{STATIC_URL}}js/main.js"></script>
+
+        <script src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+        <script>window.jQuery.ui || document.write('<script src="{{STATIC_URL}}jquery.ui/jquery-ui.min.js"><\/script>')</script>
+
+
+        <script type="text/javascript">{% block extra_javascript_end %}{% endblock extra_javascript_end %}</script>
+
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-55662214-1', 'auto');
+          ga('send', 'pageview');
+
+        </script>
+
+    </body>
+</html>

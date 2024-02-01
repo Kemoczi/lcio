@@ -1,0 +1,34 @@
+#!/bin/bash
+set -eo pipefail
+
+get_variable() {
+	awk -F: "/^$1/"'{print $2}' $DIR/../etc/$CI_COMMIT_BRANCH.yaml | \
+	sed -e 's/^[ 	]*//' -e 's/[ 	]*$//'
+}
+
+DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+ROLE_SESSION_NAME=pipeline-${CI_PROJECT_PATH_SLUG}-${CI_PIPELINE_ID}
+
+
+PROFILE=default
+ACCOUNT_ID=$(get_variable account_id)
+CLUSTER=$(get_variable cluster)
+ROLE_ARN=arn:aws:iam::$ACCOUNT_ID:role/KubernetesDeploymentRunner
+
+
+CREDENTIALS=($(aws sts assume-role-with-web-identity \
+        --role-arn ${ROLE_ARN} \
+        --role-session-name ${ROLE_SESSION_NAME} \
+        --web-identity-token ${CI_JOB_JWT_V2} \
+        --duration-seconds 3600 \
+        --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+        --output text))
+
+aws configure set --profile $PROFILE aws_access_key_id "${CREDENTIALS[0]}"
+aws configure set --profile $PROFILE aws_secret_access_key "${CREDENTIALS[1]}"
+aws configure set --profile $PROFILE aws_session_token "${CREDENTIALS[2]}"
+aws configure set --profile $PROFILE region eu-west-1
+
+aws configure --profile $PROFILE list
+
+aws eks update-kubeconfig --name $CLUSTER

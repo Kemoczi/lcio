@@ -1,0 +1,26 @@
+cairocffi
+gspread
+oauth2client
+textbase
+pillow
+django
+uvicorn
+FastAPI
+markdown
+django-markup
+dropbox
+pyreadline
+ipython
+# mercurial
+natsort
+python-xmp-toolkit
+pytz
+requests
+urllib3
+aiofile
+aiosqlite
+databases
+starlette
+SQLAlchemy
+xlsxwriter
+progress

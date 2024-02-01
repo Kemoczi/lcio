@@ -1,0 +1,20 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+deploy:
+  kustomize:
+    paths: ["k8s/base"]
+build:
+  local:
+    push: false
+  artifacts:
+    - image: registry.gitlab.com/brillpublishers/code/metabotnik
+      context: .
+      sync:
+        infer:
+          - "api/*.py"
+portForward:
+  - resourceType: deployment
+    resourceName: metabotnik
+    namespace: metabotnik
+    port: 8000
+    localPort: 8000 # *Optional*

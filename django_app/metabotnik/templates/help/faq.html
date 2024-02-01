@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+<div style="padding: 30px">
+    <h1>Frequently Asked Questions</h1>
+
+    <p>Please mail us your questions, and we shall add them to this list: info@metabotnik.com</p>
+
+    <div class="faqs">
+
+        <h3>What is this?</h3>
+        <p>A website that helps you to make giant zoomable images, directly from your browser by uploading your images to Dropbox. You don't need a mega-fast computer with lots of memory, to make really impressive huge zooms. We call them 'metabotniks'. And they load fast too, even on your mobiel phone. No waiting for a giant image to load in one go.</p>
+
+
+        <h3>Why are you doing this?</h3>
+        <p>In the course of 2013 we started making gigapixel images as part of our cultural heritage and bookhistory research. The process was rather fiddly and needed some technical expertise and hefty-ish computers with sufficient memory. (at least 32GB of memory to do the really large ones). This is not accessible to general humanities researchers and we decided to make a web application that will make this kind of tool available to anyone with a web browser and a Dropbox account. Metabotnik was born.</p>
+
+        <h3>Is it done yet?</h3>
+        <p>Far from it! We are still frantically busy coding and fixing stuff and making plans on how it should work. Next major step is to add metadata editing and variable zoom level editing. Busy, busy!</p>
+
+        <h3>Who can see my projects?</h3>
+        <p>A metabotnik is only visible to other users once you tick the 'Published' box. You can uncheck it at any time to hide it again.</p>
+
+        <h3>Can I delete the files in my Dropbox once the metabotnik has been made?</h3>
+        <p>Yes! When you make a metabotnik, the files are copied from your Dropbox on to the Metabotnik server. You can then free up space on your Dropbox again if you like. Watch out though: if you delete files in your own Dropbox and press the 'Re-sync Dropbox' button, the files will also be deleted from the Metabotnik server. Your generated metabotnik views will not be deleted until you delete the whole project.</p>
+        
+        <h3>How can I delete files on the server?</h3>
+        <p>Delete the file from your local Dropbox and then click on the 'Re-sync Dropbox' button in the edit screen of your project. Any files on the server which can not be found in your Dropbox will be deleted.</p>
+    
+        <h3>How can I add metadata and how will they show?</h3>
+        <p>This feature has not been implemented yet, we are working on it.</p>
+
+        <h3>Can we track what areas of the images are viewed by users?</h3>
+        <p>Not yet. But this is a planned feature.  We would like to track which parts of an image gets zoomed on by users, and log that. The resultant logs could be shown as a 'heat-map' overlayed on the original metabotnik so the owner could see what parts are popular and gets viewed a lot.</p>
+
+        <h3>My images are rotated but they don't look like that in my metabotniks</h3>
+        <p>Some software (like Photoshop or the OS X Preview) do not rotate an image by actually moving the pixels around, but only set a property in the file saying: "rotate this file so many degrees when displaying it". When compliant software that understands this metadata displays the file it looks like it is rotated. The Metabotnik server works with the raw data, so if you want your images rotated you have to actually rotate them. Sorry about that.</p>
+    </div>
+</div>
+{% endblock maincontent %}

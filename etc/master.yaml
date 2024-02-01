@@ -1,0 +1,4 @@
+environment:  prod
+branch: master
+account_id: 438414984639
+cluster: brill-prod-hetzner-eks
